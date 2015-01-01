@@ -1,29 +1,47 @@
-Tested on Ubuntu 12.04 and 13.10.
+Deckard is mainly tested on Ubuntu.
+It is known to work from, at least, Ubuntu 12.04 to 14.10.
 
 
 DEPENDENCIES
 ============
 
-You will need the following packages:
+You will need the following packages on Ubuntu:
 
 * broadwayd
 * libgtk-3-bin >= 3.8 (with the Broadway backend enabled)
 * python3
 * python3-gi
 * python3-jinja2
-* A Web server which provides the WSGI API for Python3
-(we assume apache2 and libapache2-mod-wsgi-py3 in this document)
+* A Web server which provides the WSGI API for Python3,
+like libapache2-mod-wsgi-py3 or uwsgi-plugin-python3.
+UWSGI is more tested and therefore recommended.
+* A reverse proxy capable of proxying websockets,
+like Nginx, HAproxy or a recent Apache.
+Nginx is more tested and therefore recommended.
 
-You may want to use the latest version of GTK+ if your interfaces depend on new
-widgets.
-
-On Ubuntu 13.10, you can get a Broadway enabled GTK+ and broadwayd through
+On Ubuntu, you can get a Broadway enabled GTK+ and broadwayd through
 the following PPA:
 https://launchpad.net/~malizor/+archive/gtk-broadway
 
-If you know APT and are not afraid, you can also use this PPA (for saucy) with
-older Ubuntu releases. For example, this is the case on the deckard.malizor.org
-server (Ubuntu 12.04 + PPA + 13.10 repo + APT configuration).
+You may want to use the latest version of GTK+ if your interfaces depend on
+newly introduced widgets. For doing so, you should probably use the latest
+release of your distribution.  
+For example, on http://deckard.malizor.org, Deckard is hosted in a LXC container
+with the latest Ubuntu version, the host being an Ubuntu LTS.
+
+
+RECOMMENDED SETUP (UWSGI + Nginx)
+=================================
+
+This is the setup in use on http://deckard.malizor.org.
+
+Note that the following procedure is also the one used in the Dockerfile
+found in the "docker" folder. You can run all commands it contains
+sequentially.
+
+As explained before, it is recommended to use the latest release of your distribution in order to access an up-to-date version of GTK+.  
+On http://deckard.malizor.org, deckard is actually hosted in a LXC container with the latest Ubuntu version while
+
 
 
 INSTALLATION
@@ -46,10 +64,10 @@ sudo useradd deckard --create-home -s /usr/sbin/nologin -g www-data
 
 - Copy the source folder content in /home/deckard/deckard-app
   Of course, all files should belong to the 'deckard' user.
-  
+
 - Copy conf/apache2/<version>/deckard.conf in /etc/apache2/sites-available
   (you probably want to change ServerAdmin and ServerName before)
-  
+
 - enable the site and restart Apache
 sudo a2ensite deckard && sudo service apache2 restart
 
